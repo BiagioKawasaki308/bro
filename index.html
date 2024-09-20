@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strumento Immagini Avanzato</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f7fa;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 900px;
+      margin: 50px auto;
+      background-color: white;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .header {
+      background-color: #4CAF50;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .tabs {
+      display: flex;
+      justify-content: space-evenly;
+      background-color: #333;
+      color: white;
+    }
+    .tabs button {
+      background-color: #333;
+      color: white;
+      border: none;
+      padding: 15px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 18px;
+      transition: background-color 0.3s ease;
+    }
+    .tabs button:hover, .tabs button.active {
+      background-color: #4CAF50;
+    }
+    .tab-content {
+      display: none;
+      padding: 20px;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .section-title {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+    input[type="file"] {
+      padding: 10px;
+      margin: 20px 0;
+    }
+    button {
+      padding: 12px 25px;
+      margin: 15px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .preview, .result {
+      margin-top: 20px;
+    }
+    .preview img, .result img {
+      max-width: 100%;
+      border-radius: 8px;
+    }
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    .loading {
+      display: none;
+      font-size: 16px;
+      color: #666;
+      margin-top: 20px;
+    }
+    .clear-btn {
+      background-color: #f44336;
+      margin-top: 10px;
+    }
+    .clear-btn:hover {
+      background-color: #d32f2f;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">Strumento Avanzato per Rimozione Sfondo e Conversione Immagini</div>
+    <div class="tabs">
+      <button class="tablink active" onclick="openTab(event, 'removeBg')">Rimozione Sfondo</button>
+      <button class="tablink" onclick="openTab(event, 'convert')">Conversione Formato</button>
+    </div>
+
+    <!-- Sezione Rimozione Sfondo -->
+    <div id="removeBg" class="tab-content active">
+      <h2 class="section-title">Rimuovi lo sfondo dell'immagine</h2>
+      <input type="file" id="fileInputRemove" accept="image/*" onchange="showPreviewRemove()">
+      <div class="preview" id="previewRemove" style="display:none;">
+        <h3>Anteprima Immagine:</h3>
+        <img id="previewImageRemove" src="" alt="Anteprima Immagine">
+        <div class="action-buttons">
+          <button onclick="removeBackground()">Rimuovi Sfondo</button>
+          <button class="clear-btn" onclick="clearImage('remove')">Elimina Immagine</button>
+        </div>
+      </div>
+      <div class="loading" id="loadingRemove">Rimozione dello sfondo in corso...</div>
+      <div class="result" id="resultRemove" style="display:none;">
+        <h3>Risultato:</h3>
+        <img id="outputImageRemove" src="" alt="Immagine Elaborata">
+        <p><a id="downloadLinkRemove" href="" download="image_no_background.png">Scarica l'immagine</a></p>
+      </div>
+    </div>
+
+    <!-- Sezione Conversione Formato -->
+    <div id="convert" class="tab-content">
+      <h2 class="section-title">Converti il formato dell'immagine</h2>
+      <input type="file" id="fileInputConvert" accept="image/*" onchange="showPreviewConvert()">
+      <div class="preview" id="previewConvert" style="display:none;">
+        <h3>Anteprima Immagine:</h3>
+        <img id="previewImageConvert" src="" alt="Anteprima Immagine">
+        <div class="action-buttons">
+          <button onclick="convertFile()">Converti Immagine</button>
+          <button class="clear-btn" onclick="clearImage('convert')">Elimina Immagine</button>
+        </div>
+        <label for="formatSelect">Seleziona formato di conversione:</label>
+        <select id="formatSelect">
+          <option value="png">PNG</option>
+          <option value="jpeg">JPEG</option>
+          <option value="webp">WebP</option>
+          <option value="bmp">BMP</option>
+          <option value="gif">GIF</option>
+        </select>
+      </div>
+      <div class="loading" id="loadingConvert">Conversione in corso...</div>
+      <div class="result" id="resultConvert" style="display:none;">
+        <h3>Risultato:</h3>
+        <img id="outputImageConvert" src="" alt="Immagine Convertita">
+        <p><a id="downloadLinkConvert" href="" download="converted_image.png">Scarica l'immagine</a></p>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+  <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/66ed54aae5982d6c7bb18587/1i87h5ev9';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+    </script>
+    
+</body>
+</html>
